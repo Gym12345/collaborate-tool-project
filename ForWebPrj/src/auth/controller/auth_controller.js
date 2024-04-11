@@ -18,11 +18,13 @@ const authProcess={
         const loginCheckresult = await service.authProcess.loginCheck( req.body );
 
         console.log("loginCheckresult"+loginCheckresult);
-        if( loginCheckresult.result === 1){
+        if( loginCheckresult.result === 1){ //success
+
+            loginCheckresult.status = "online"; // 
             req.session.result = loginCheckresult;  // it holds  name, position ,team
             res.locals.info = req.session.result;
-           
-            //res.send( `<script> location.href="${url}";</script>`,{session:req.session.result})
+            
+            console.log("req.session.result:",req.session.result);
             res.render("mainView",{session:req.session.result})
          }else{
             res.send(loginCheckresult.msg)

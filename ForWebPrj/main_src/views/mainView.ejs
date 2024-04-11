@@ -43,16 +43,17 @@
       <p>Position: <%= session.position %></p>
       <div class="status">
         <label for="status">Choose your status:</label>
-        <select id="status">
+        <select id="status" onchange="updateStatus()">
           <option value="online">Online</option>
           <option value="offline">Offline</option>
           <option value="away">Away</option>
           <option value="Do Not Disturb">Do Not Disturb</option>
         </select>
-        <button onclick="updateStatus()">Update Status</button>
+        <br>
+       
       </div>
     <% } else { %>
-      <h2>Login required.</h2>
+      <h2>Login required.</h2>  
     <% } %>
   </div>
 
@@ -71,6 +72,10 @@
       };
       xhr.send(JSON.stringify({ status: status }));
     }
+  
+    updateStatus();
+
+    
   </script>
 </body>
 </html>
