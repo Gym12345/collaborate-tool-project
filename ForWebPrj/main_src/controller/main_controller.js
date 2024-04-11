@@ -9,15 +9,15 @@ const mainAjax ={
     .then(result => {
       console.log("result"+result);
 
-      let curr_status=result.status;
-      req.session.status = curr_status;
+      //let curr_status=result.status;
+      req.session.status = result.status;
 
       res.status(200).json({ message: 'Status updated successfully', data: result });
     })
     .catch(err => {
       res.status(500).json({ error: 'Internal server error' });
     });
-
+    
   }
 }
 

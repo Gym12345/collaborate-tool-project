@@ -20,8 +20,14 @@ const authProcess={
         console.log("loginCheckresult"+loginCheckresult);
         if( loginCheckresult.result === 1){ //success
 
-            loginCheckresult.status = "online"; // 
+           // loginCheckresult.status = "online"; // 
             req.session.result = loginCheckresult;  // it holds  name, position ,team
+
+
+            req.session.name=loginCheckresult.name;
+            req.session.position=loginCheckresult.position;
+            req.session.team=loginCheckresult.name;
+            
             res.locals.info = req.session.result;
             
             console.log("req.session.result:",req.session.result);
