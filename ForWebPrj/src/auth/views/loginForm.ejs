@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <form id="loginform" method="post" action="/auth/loginCheck/">
+            아이디: <input type="text" name="userId" id="userId" placeholder="아이디"><br>
+            패스워드: <input type="password" name="userPw" id="userPw" placeholder="패스워드"><br>
+
+            <label for="position">직책:</label> 
+            <select id="position" name="position" required>
+                <option value="">Select Position</option>
+                <option value="PM">Project Manager</option>
+                <option value="dev">Developer</option>
+                <option value="client">Client</option>
+            </select><br>
+
+            <input type="button" onclick="LoginCheck()" value="로그인">
+            <hr>
+        </form>
+        <a href="/auth/registerForm">회원가입</a>
+        <a href="/">메인화면으로</a>
+    </div>
+    <script>
+        LoginCheck = () => {
+            let id = document.getElementById('userId');
+            let pwd = document.getElementById('userPw');
+            let position = document.getElementById('position');
+            
+            if (id.value === "") {
+                alert("아이디를 입력하세요");
+                return;
+            }
+            if (pwd.value === "") {
+                alert("패스워드를 입력하세요");
+                return;
+            }
+            if (position.value === "") {
+                alert("직책을 선택해주세요");
+                return;
+            }
+
+            document.getElementById('loginform').submit();
+        }
+    </script>
+</body>
+</html>

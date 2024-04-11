@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Status</title>
+  
+</head>
+
+<style>
+  .container {
+  position: relative;
+}
+  .status {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 20px;
+}
+
+  select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+<body>
+  <div class="container">
+    <% if (session) { %>
+      <h2>Welcome, <%= session.name %>!</h2>
+      <p>Team: <%= session.team %></p>
+      <p>Position: <%= session.position %></p>
+      <div class="status">
+        <label for="status">Choose your status:</label>
+        <select id="status">
+          <option value="online">Online</option>
+          <option value="offline">Offline</option>
+          <option value="away">Away</option>
+          <option value="Do Not Disturb">Do Not Disturb</option>
+        </select>
+        <button onclick="updateStatus()">Update Status</button>
+      </div>
+    <% } else { %>
+      <h2>Login required.</h2>
+    <% } %>
+  </div>
+
+  <script>
+    function updateStatus() {
+      var status = document.getElementById("status").value;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/update-status", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+     
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var responseData = JSON.parse(xhr.responseText);
+          alert("current status changed to:"+responseData.data.status);  
+        }
+      };
+      xhr.send(JSON.stringify({ status: status }));
+    }
+  </script>
+</body>
+</html>
