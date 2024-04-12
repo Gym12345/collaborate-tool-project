@@ -8,6 +8,7 @@ router.get("/registerForm",authCtrl.authView.registerForm);
 router.post("/loginCheck",authCtrl.authProcess.loginCheck);
 router.post("/registerCheck",authCtrl.authProcess.registerCheck);
 
+router.get("/logout",authCtrl.authProcess.logout);
 
 
 
