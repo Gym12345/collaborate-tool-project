@@ -11,6 +11,13 @@ sessionConfig.sessionConfig.store =new fileStore({path : './sessions'});
 app.use( session(sessionConfig.sessionConfig) );
 const cookieParser = require("cookie-parser")
 app.use(cookieParser());
+const path = require('path');
+
+
+
+app.use("/static",express.static("config")) // css config
+app.use("/static",express.static("./src/contribution/views")) // for contribution js 
+
 
 
 app.set("views", ["./main_src/views", "./src/auth/views" ,"./src/board/views" ,"./src/contribution/views"]); //for multiple views folder path

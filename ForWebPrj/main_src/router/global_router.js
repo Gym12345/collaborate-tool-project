@@ -9,7 +9,10 @@ module.exports=(app)=>{
     router.get("/",(req,res)=>{
         res.render("welcomePage.ejs")
     })
-        
+    router.get("/testNewPage",(req,res) =>{
+        res.render("testHTML.ejs")
+
+    });
     
     const authRouter=require("../../src/auth/router/auth_router");
     app.use("/auth",authRouter);
@@ -23,7 +26,9 @@ module.exports=(app)=>{
 
 
     router.get("/testForSession",mainController.mainAjax.fetchGlobalSession); //
-    
 
+
+   
+    
     return router;
 }
