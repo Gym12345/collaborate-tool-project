@@ -62,15 +62,22 @@ const authProcess={
         proceedWithLogin();
     }
     function proceedWithLogin() {
-        if (loginCheckresult.result === 1) { // Success
-            loginCheckresult.status = "online";
-            req.session.result = loginCheckresult;
-            res.locals.info = req.session.result;
-            console.log("req.session.result:", req.session.result);
-            res.render("mainView", { session: req.session.result });
-        } else {
-            res.send(loginCheckresult.msg);
+        try {
+            if (loginCheckresult.result === 1) { // Success
+                loginCheckresult.status = "online";
+                req.session.result = loginCheckresult;
+                //res.locals.info = req.session.result;
+                console.log("req.session.result:", req.session.result);
+                res.render("mainView", { session: req.session.result });
+            } else {
+                console.log(loginCheckresult.msg);
+               // res.redirect("/auth/loginForm");
+               res.send(loginCheckresult.msg);
+            }
+        } catch (error) {
+            console.log("login error:"+error);
         }
+       
     }
    
   

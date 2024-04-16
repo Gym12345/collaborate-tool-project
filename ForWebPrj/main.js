@@ -13,7 +13,7 @@ const cookieParser = require("cookie-parser")
 app.use(cookieParser());
 
 
-app.set("views", ["./main_src/views", "./src/auth/views" ,"./src/board/views"]); //for multiple views folder path
+app.set("views", ["./main_src/views", "./src/auth/views" ,"./src/board/views" ,"./src/contribution/views"]); //for multiple views folder path
 app.set("view engine","ejs");
 
 

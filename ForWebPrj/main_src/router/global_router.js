@@ -14,6 +14,10 @@ module.exports=(app)=>{
     const authRouter=require("../../src/auth/router/auth_router");
     app.use("/auth",authRouter);
 
+    const contributionRouter=require("../../src/contribution/router/contribution_router");
+    app.use("/contribution",contributionRouter);
+
+
     const mainController = require("../controller/main_controller");
     router.post("/update-status", mainController.mainAjax.updateStatus);
 

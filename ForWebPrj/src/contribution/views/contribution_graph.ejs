@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    graph page 
+    <a href="javascript:void(0);" onclick="history.back();">Go Back</a>
+
+    <hr>
+    <% for(let i = 0; i < teamList.length; i++) { %>
+       
+        
+        <a hidden id="tl<%- i %>" data-team-list='<%- JSON.stringify(teamList[i]) %>'></a>
+       
+    <%} %>
+        
+    <a hidden id="tLength" team-list-length='<%- JSON.stringify(teamList.length) %>'></a>
+       
+   
+   
+
+    <% for(let i = 0; i < contributionsByRound.length; i++) { %>
+        <a hidden id="bd<%- i %>" data-contribution-list='<%- JSON.stringify(contributionsByRound[i]) %>'></a>
+        <div id="employee_piechart<%- i %>" style="width: 500px; height: 500px; float: left;"></div>
+    <% } %>
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript">
+
+        google.load("visualization", "1", {packages:["corechart"]});
+        google.setOnLoadCallback(drawCharts);
+        
+        function drawCharts() {
+            let tLength=JSON.parse(document.getElementById("tLength").getAttribute("team-list-length"));
+            console.log("tLength:",tLength);
+            for(let i = 0; i < tLength; i++) { // 동적으로 바꿕야함 length
+                let contributionsData = JSON.parse(document.getElementById("bd" + i).getAttribute("data-contribution-list"));
+
+                let teamListData = JSON.parse(document.getElementById("tl" + i).getAttribute("data-team-list"));
+               
+                console.log("Contributions data for chart " + i + ":", contributionsData);// 동적 
+                console.log("teamList " + i + ":", teamListData);// 동적 
+                var data = google.visualization.arrayToDataTable(contributionsData);
+                var options = {
+                    title: teamListData    //동적
+                };
+                var chart = new google.visualization.PieChart(document.getElementById("employee_piechart" + i));// 동적 
+                chart.draw(data, options);
+            }
+        }
+    </script>
+</body>
+</html>
