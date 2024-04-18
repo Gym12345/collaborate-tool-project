@@ -501,43 +501,23 @@
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-
-
-
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
+                                    <h6 class="m-0 font-weight-bold text-primary">contribution chart</h6>
                                 </div>
                                 <!-- Card Body -->
-                                <div class="card-body">  <!--contribution mark-->
+                                <div id="contribute-buttons"  style="text-align: center;" >
+                                    <button id="loadContribution1" class="btn btn-primary" onclick="loadContribution()">code line</button>
+                                    <button id="loadContribution2" class="btn btn-warning">votes</button>
+                                    <button id="loadContribution3" class="btn btn-danger">MVP</button>
+                                </div>
+                               <hr>
+                                <div class="card-body" id="contributionContainer">  <!--contribution mark-->
                                   
                                     
-                                    <a href="#" onclick="loadContribution()">기여도</a>
                                     <div class="chart-pie pt-4 pb-2">
                                         <canvas id="myPieChart"></canvas>
                                     </div>
                                     <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -760,16 +740,86 @@
     <!-- Page level custom scripts -->
     <script src="../../static/js/demo/chart-area-demo.js"></script>
     <script src="../../static/js/demo/chart-pie-demo.js"></script>
-
+    
+    
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    
+    
     <script>
-        function loadContribution() {
-            fetch('/contribution')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('contributionContainer').innerHTML = data;
-                })
-                .catch(error => console.error('Error fetching contribution:', error));
+   
+    function loadContribution() {     //  구글 chart api 가 로딩이안되니까 여기서 로딩 해버림 그냥
+        fetch('/contribution/selectTeam')
+            .then(response => response.text())
+            .then(data => {
+               
+                console.log("codeline");
+                  
+                document.getElementById('contributionContainer').innerHTML = data;
+      });
+    }
+
+          
+
+    function selectButton(button) {
+      let teamName = JSON.parse(button.getAttribute("data-team"));
+      console.log("teamname:",teamName);
+      
+      $.ajax({   //ajax 는 controller의 res.json 만 받는다  
+        type: "get",
+        url: "/contribution/forEachTeamData" ,
+        data: { team: teamName },
+        success: function(response) {
+          
+          let contributionsForEachTeam = response.contributionsForEachTeam;
+          contributionsForEachTeam=JSON.stringify(contributionsForEachTeam);
+
+          //   console.log("contributionsForEachTeam:",contributionsForEachTeam)
+          let currenTeam= JSON.stringify(response.currenTeam);
+          
+         
+          var piechart = document.getElementById("piechart");
+        
+          
+          
+          let html = `
+            <a hidden id="teamName" data-teamName='${currenTeam}'></a>
+            <a hidden id="ft" data-contributionsForEachTeam='${contributionsForEachTeam}'></a>
+            <div id="employee_piechart_ForEachTeam" style="width: 500px; height: 500px; float: left;"></div>
+          `;
+
+          piechart.innerHTML = html;
+          drawChart(currenTeam);
+        },
+        error: function(error) {
+          console.error("Error sending data to server:", error);
         }
+      });
+    }
+
+ 
+    function drawChart(teamName) {
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(function() { //sets a callback function to be executed when the Google Charts library has finished loading
+       
+        
+        let contributionsForEachTeamData = JSON.parse(document.getElementById("ft").getAttribute("data-contributionsForEachTeam"));
+        // console.log("contributionsForEachTeamData:",contributionsForEachTeamData);
+
+        var data = google.visualization.arrayToDataTable(contributionsForEachTeamData);
+        var options = {
+          title: teamName
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('employee_piechart_ForEachTeam'));
+        chart.draw(data, options);
+      });
+    }
+
+
+
+
+    // window.onload = loadContribution; // Load contribution data when the window finishes loading
+
     </script>
 </body>
 
