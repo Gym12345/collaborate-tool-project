@@ -31,6 +31,17 @@ const contributionProcess = {
        
        
         return performanceInfo;
+    },
+    MVP123: async() =>{
+        
+        let MVPInfo=[];
+        const sql1=`select user_name,UPVOTE-DOWNVOTE as vote, codeLine  from PERFORMANCE order by UPVOTE-DOWNVOTE desc, CODELINE desc,UPVOTE desc `;
+        MVPInfo=await(await con).execute(sql1);
+        console.table(MVPInfo.rows);
+        console.log("MVPInfo:"+MVPInfo.rows[0].USER_NAME);
+        
+        return MVPInfo.rows;
+
     }
 
 }

@@ -502,14 +502,15 @@
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">contribution chart</h6>
+                                    <div id="contribute-buttons"  style="text-align: center;" >
+                                        <button id="loadContribution1" class="btn btn-primary" onclick="loadContribution()">code line</button>
+                                        <button id="loadContribution2" class="btn btn-warning" onclick="">votes</button>
+                                        <button id="loadContribution3" class="btn btn-danger" onclick="loadMVP()">MVP</button>
+                                    </div>
                                 </div>
                                 <!-- Card Body -->
-                                <div id="contribute-buttons"  style="text-align: center;" >
-                                    <button id="loadContribution1" class="btn btn-primary" onclick="loadContribution()">code line</button>
-                                    <button id="loadContribution2" class="btn btn-warning">votes</button>
-                                    <button id="loadContribution3" class="btn btn-danger">MVP</button>
-                                </div>
-                               <hr>
+                                
+                              
                                 <div class="card-body" id="contributionContainer">  <!--contribution mark-->
                                   
                                     
@@ -744,7 +745,7 @@
     
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     
     <script>
    
@@ -752,14 +753,23 @@
         fetch('/contribution/selectTeam')
             .then(response => response.text())
             .then(data => {
-               
                 console.log("codeline");
-                  
                 document.getElementById('contributionContainer').innerHTML = data;
       });
     }
 
-          
+
+    function loadMVP(){
+        fetch('/contribution/MVP')
+            .then(response => response.text())
+            .then(data =>{
+                console.log("MVP");     
+                document.getElementById('contributionContainer').innerHTML = data;
+                google.charts.load('current', {'packages':['bar']});
+                google.charts.setOnLoadCallback(drawChart_MVP);
+            })
+    }
+    
 
     function selectButton(button) {
       let teamName = JSON.parse(button.getAttribute("data-team"));
@@ -773,15 +783,8 @@
           
           let contributionsForEachTeam = response.contributionsForEachTeam;
           contributionsForEachTeam=JSON.stringify(contributionsForEachTeam);
-
-          //   console.log("contributionsForEachTeam:",contributionsForEachTeam)
           let currenTeam= JSON.stringify(response.currenTeam);
-          
-         
           var piechart = document.getElementById("piechart");
-        
-          
-          
           let html = `
             <a hidden id="teamName" data-teamName='${currenTeam}'></a>
             <a hidden id="ft" data-contributionsForEachTeam='${contributionsForEachTeam}'></a>
@@ -789,7 +792,7 @@
           `;
 
           piechart.innerHTML = html;
-          drawChart(currenTeam);
+          drawChart_contribution(currenTeam);
         },
         error: function(error) {
           console.error("Error sending data to server:", error);
@@ -798,16 +801,14 @@
     }
 
  
-    function drawChart(teamName) {
+    function drawChart_contribution(teamName) {
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(function() { //sets a callback function to be executed when the Google Charts library has finished loading
-       
-        
-        let contributionsForEachTeamData = JSON.parse(document.getElementById("ft").getAttribute("data-contributionsForEachTeam"));
-        // console.log("contributionsForEachTeamData:",contributionsForEachTeamData);
 
-        var data = google.visualization.arrayToDataTable(contributionsForEachTeamData);
-        var options = {
+      let contributionsForEachTeamData = JSON.parse(document.getElementById("ft").getAttribute("data-contributionsForEachTeam"));
+        
+      var data = google.visualization.arrayToDataTable(contributionsForEachTeamData);
+      var options = {
           title: teamName
         };
         var chart = new google.visualization.PieChart(document.getElementById('employee_piechart_ForEachTeam'));
@@ -815,12 +816,44 @@
       });
     }
 
+    function drawChart_MVP() {
+    
+        let tempArr=[];
+        let voteArr=[];
+        voteArr.push( ['name', 'likes']);
+        tempArr=JSON.parse(document.getElementById("voteArr").getAttribute("data-mvpArr"));
+        
+        for(let i=0; i < tempArr.length ; i++){
+            voteArr.push([tempArr[i].userName, tempArr[i].vote ]);
+        }
+        console.log("voteArr(drawchart):",voteArr);
 
+        var data1 = google.visualization.arrayToDataTable(
+            voteArr
+        );
+        
+        var options1 = {
+            chart: 
+                {
+                title: 'Reputation',
+                subtitle: '',
+                },
 
+            bars: 'vertical' ,// Required for Material Bar Charts.
 
-    // window.onload = loadContribution; // Load contribution data when the window finishes loading
+            series: {
+                0: { color: 'red' },   
+       
+            }
+        };
 
+        var chart1 = new google.charts.Bar(document.getElementById('barchart_material'));
+        chart1.draw(data1, google.charts.Bar.convertOptions(options1));
+    }   
     </script>
+
+
+
 </body>
 
 </html>

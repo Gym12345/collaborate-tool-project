@@ -1,11 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    mvp
-</body>
+<html>
+  <head>
+    <style>
+        .highlight-text {
+          color: orange;
+        }
+      </style>
+  </head>
+  <body>
+    <div id="barchart_material" style="width: 500px; height: 500px;"></div>
+
+
+  
+      
+   
+      
+      <strong>Today's mvp: <span class="highlight-text"><%=MVPArr[0].userName%></span>, Congrat!, <span class="highlight-text"><%=MVPArr[0].userName%></span></strong>
+      
+      
+    <hr>
+
+    
+    
+
+        <a hidden id="voteArr" data-mvpArr='<%-JSON.stringify(MVPArr)%>' ></a>  
+       
+
+ 
+
+
+  </body>
+ 
+
+
+  
+  </script>
 </html>

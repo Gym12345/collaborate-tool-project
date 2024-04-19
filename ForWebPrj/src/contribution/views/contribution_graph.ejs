@@ -56,7 +56,62 @@
         }
     </script> -->
   
+ <!-- <script>   for fetch  (just in case)
+    
+    function selectButton(button) {
+      let teamName = JSON.parse(button.getAttribute("data-team"));
+      console.log("teamname:",teamName);
+      
+      $.ajax({   //ajax 는 controller의 res.json 만 받는다  
+        type: "get",
+        url: "forEachTeamData",
+        data: { team: teamName },
+        success: function(response) {
+          
+          let contributionsForEachTeam = response.contributionsForEachTeam;
+          contributionsForEachTeam=JSON.stringify(contributionsForEachTeam);
 
+          console.log("contributionsForEachTeam:",contributionsForEachTeam)
+          let currenTeam= JSON.stringify(response.currenTeam);
+          
+         
+          var piechart = document.getElementById("piechart");
+        
+          
+          
+          let html = `
+            <a hidden id="teamName" data-teamName='${currenTeam}'></a>
+            <a hidden id="ft" data-contributionsForEachTeam='${contributionsForEachTeam}'></a>
+            <div id="employee_piechart_ForEachTeam" style="width: 500px; height: 500px; float: left;"></div>
+          `;
+
+          piechart.innerHTML = html;
+          drawChart(currenTeam);
+        },
+        error: function(error) {
+          console.error("Error sending data to server:", error);
+        }
+      });
+    }
+
+ 
+    function drawChart(teamName) {
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(function() {
+       
+        
+        let contributionsForEachTeamData = JSON.parse(document.getElementById("ft").getAttribute("data-contributionsForEachTeam"));
+        console.log("contributionsForEachTeamData:",contributionsForEachTeamData);
+
+        var data = google.visualization.arrayToDataTable(contributionsForEachTeamData);
+        var options = {
+          title: teamName
+        };
+        var chart = new google.visualization.PieChart(document.getElementById('employee_piechart_ForEachTeam'));
+        chart.draw(data, options);
+      });
+    }
+  </script> -->
 </body>
 
 </html>

@@ -22,9 +22,14 @@ const ContributionView = {
 
     },
     showMVP: async(req,res) =>{
-        
-
-        res.render("MVP_View");
+        let tempArr = [];  // it holds whole data
+        let MVPArr=[];  // it will holds only top 3 data
+        tempArr = await service.contributionProcess.showMVP();
+        for(let i=0 ; i< 3 ; i++){
+            MVPArr.push(tempArr[i]);
+        }
+        console.log("MVPArr:", MVPArr);
+        res.render("MVP_View",{MVPArr});
     }
     
        //mainView: async (req,res) =>{   // not being used
